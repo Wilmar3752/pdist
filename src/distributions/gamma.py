@@ -1,17 +1,17 @@
 import numpy as np
-from scipy.stats import ks_1samp
-from scipy.stats import norm
+from scipy.stats import ks_1samp, gamma
 
-class Normal:
+class Gamma:
     def __init__(self, x):
         self.x = x
     
     def fit(self):
-        self.mu, self.sigma = norm.fit(self.x)
+        self.alpha = gamma.fit(self.x)[0]
+        self.beta = gamma.fit(self.x)[2]
     
     def set_distribution(self):
         self.fit()
-        self.dist = norm(loc=self.mu, scale=self.sigma)
+        self.dist = gamma(a=self.alpha,scale=self.beta)
 
     def test(self):
         self.set_distribution()
