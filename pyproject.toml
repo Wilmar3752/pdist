@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pdist"
+version = "0.1.0"
+description = "Find the best probability distribution for your data"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+keywords = ["statistics", "probability", "distribution", "fitting", "data-analysis"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "numpy>=1.20.0",
+    "scipy>=1.7.0",
+    "pandas>=1.3.0",
+    "matplotlib>=3.4.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-cov>=3.0.0",
+    "black>=22.0.0",
+    "isort>=5.10.0",
+    "flake8>=4.0.0",
+    "mypy>=0.950",
+    "pre-commit>=2.17.0",
+]
+docs = [
+    "sphinx>=4.5.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "sphinx-autodoc-typehints>=1.18.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/pdist"
+Documentation = "https://pdist.readthedocs.io"
+Repository = "https://github.com/yourusername/pdist"
+"Bug Tracker" = "https://github.com/yourusername/pdist/issues"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["pdist*"]
+
+[tool.black]
+line-length = 88
+target-version = ['py38', 'py39', 'py310', 'py311']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 88
+multi_line_output = 3
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--cov=pdist",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]
+
+[tool.mypy]
+python_version = "3.8"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+

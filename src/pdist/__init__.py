@@ -1,0 +1,81 @@
+"""
+pdist - Find the best probability distribution for your data
+==============================================================
+
+pdist is a Python package for fitting probability distributions to data
+and identifying the best fit using various statistical tests.
+
+Basic Usage
+-----------
+```python
+from pdist import DistributionFitter
+import numpy as np
+
+# Generate sample data
+data = np.random.gamma(2, 2, 1000)
+
+# Fit distributions
+fitter = DistributionFitter(data)
+results = fitter.fit()
+
+# Get best distribution
+best = fitter.get_best_distribution()
+print(f"Best fit: {best['distribution']}")
+
+# View summary
+print(fitter.summary())
+
+# Plot results
+fitter.plot_best_fit()
+```
+
+For more information, see the documentation at https://pdist.readthedocs.io
+"""
+
+__version__ = "0.1.0"
+__author__ = "Your Name"
+__license__ = "MIT"
+
+# Core functionality
+from .core.fitter import DistributionFitter
+from .core.base import BaseDistribution
+
+# Continuous distributions
+from .distributions.continuous.normal import Normal
+from .distributions.continuous.gamma import Gamma
+from .distributions.continuous.beta import Beta
+from .distributions.continuous.weibull import Weibull
+
+# Exceptions
+from .utils.exceptions import (
+    PdistException,
+    DataValidationError,
+    FittingError,
+    InsufficientDataError,
+    InvalidDistributionError,
+    ConvergenceError,
+)
+
+__all__ = [
+    # Main classes
+    "DistributionFitter",
+    "BaseDistribution",
+    
+    # Distributions
+    "Normal",
+    "Gamma",
+    "Beta",
+    "Weibull",
+    
+    # Exceptions
+    "PdistException",
+    "DataValidationError",
+    "FittingError",
+    "InsufficientDataError",
+    "InvalidDistributionError",
+    "ConvergenceError",
+    
+    # Metadata
+    "__version__",
+]
+
