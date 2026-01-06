@@ -334,8 +334,8 @@ If you use this package in your research, please cite:
 ## Contact
 
 - GitHub: [@Wilmar3752](https://github.com/Wilmar3752)
-- Email: your.email@example.com
+- Email: wilmar.sepulveda2@gmail.com
 
 ---
 
-Made with ❤️ for the data science community
+Made with ❤️
