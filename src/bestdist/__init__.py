@@ -1,14 +1,14 @@
 """
-pdist - Find the best probability distribution for your data
-==============================================================
+bestdist - Find the best probability distribution for your data
+================================================================
 
-pdist is a Python package for fitting probability distributions to data
+bestdist is a Python package for fitting probability distributions to data
 and identifying the best fit using various statistical tests.
 
 Basic Usage
 -----------
 ```python
-from pdist import DistributionFitter
+from bestdist import DistributionFitter
 import numpy as np
 
 # Generate sample data
@@ -29,11 +29,11 @@ print(fitter.summary())
 fitter.plot_best_fit()
 ```
 
-For more information, see the documentation at https://pdist.readthedocs.io
+For more information, see the documentation at https://github.com/Wilmar3752/pdist
 """
 
 __version__ = "0.1.0"
-__author__ = "Your Name"
+__author__ = "Wilmar Sepulveda"
 __license__ = "MIT"
 
 # Core functionality
@@ -48,7 +48,7 @@ from .distributions.continuous.weibull import Weibull
 
 # Exceptions
 from .utils.exceptions import (
-    PdistException,
+    BestdistException,
     DataValidationError,
     FittingError,
     InsufficientDataError,
@@ -68,7 +68,7 @@ __all__ = [
     "Weibull",
     
     # Exceptions
-    "PdistException",
+    "BestdistException",
     "DataValidationError",
     "FittingError",
     "InsufficientDataError",

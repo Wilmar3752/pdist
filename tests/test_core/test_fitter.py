@@ -3,8 +3,8 @@
 import pytest
 import numpy as np
 import pandas as pd
-from pdist import DistributionFitter
-from pdist.distributions.continuous import Normal, Gamma
+from bestdist import DistributionFitter
+from bestdist.distributions.continuous import Normal, Gamma
 
 
 class TestDistributionFitter:

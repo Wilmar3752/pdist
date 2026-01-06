@@ -1,8 +1,8 @@
-# pdist 📊
+# bestdist 📊
 
 **Find the best probability distribution for your data**
 
-`pdist` is a Python package that helps you identify which probability distribution best fits your data using statistical tests and information criteria.
+`bestdist` is a Python package that helps you identify which probability distribution best fits your data using statistical tests and information criteria.
 
 [![Python Version](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -22,12 +22,12 @@
 
 ### From PyPI (when published)
 ```bash
-pip install pdist
+pip install bestdist
 ```
 
 ### From source
 ```bash
-git clone https://github.com/yourusername/pdist.git
+git clone https://github.com/Wilmar3752/pdist.git
 cd pdist
 pip install -e .
 ```
@@ -40,7 +40,7 @@ pip install -e ".[dev]"
 ## Quick Start
 
 ```python
-from pdist import DistributionFitter
+from bestdist import DistributionFitter
 import numpy as np
 
 # Your data (can be list, numpy array, or pandas Series)
@@ -88,8 +88,8 @@ fitter.compare_distributions()
 ### Custom Distribution List
 
 ```python
-from pdist import DistributionFitter
-from pdist.distributions.continuous import Normal, Gamma, Beta
+from bestdist import DistributionFitter
+from bestdist.distributions.continuous import Normal, Gamma, Beta
 
 # Only fit specific distributions
 fitter = DistributionFitter(
@@ -111,7 +111,7 @@ best_bic = fitter.get_best_distribution(criterion='bic')
 ### Individual Distribution Usage
 
 ```python
-from pdist.distributions.continuous import Normal
+from bestdist.distributions.continuous import Normal
 import numpy as np
 
 # Generate data
@@ -141,7 +141,7 @@ cdf_values = dist.cdf(x)
 
 ```python
 import pandas as pd
-from pdist import DistributionFitter
+from bestdist import DistributionFitter
 
 # Load data
 df = pd.read_csv('data.csv')
@@ -158,7 +158,7 @@ print(summary_df)
 ### Custom Distributions
 
 ```python
-from pdist.core.base import BaseDistribution
+from bestdist.core.base import BaseDistribution
 from scipy.stats import expon, rv_continuous
 from typing import Tuple
 
@@ -308,11 +308,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 If you use this package in your research, please cite:
 
 ```bibtex
-@software{pdist2024,
-  author = {Your Name},
-  title = {pdist: Find the best probability distribution for your data},
+@software{bestdist2024,
+  author = {Sepulveda, Wilmar},
+  title = {bestdist: Find the best probability distribution for your data},
   year = {2024},
-  url = {https://github.com/yourusername/pdist}
+  url = {https://github.com/Wilmar3752/pdist}
 }
 ```
 
@@ -333,7 +333,7 @@ If you use this package in your research, please cite:
 
 ## Contact
 
-- GitHub: [@yourusername](https://github.com/yourusername)
+- GitHub: [@Wilmar3752](https://github.com/Wilmar3752)
 - Email: your.email@example.com
 
 ---

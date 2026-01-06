@@ -1,27 +1,27 @@
-"""Custom exceptions for the pdist package."""
+"""Custom exceptions for the bestdist package."""
 
 
-class PdistException(Exception):
-    """Base exception for all pdist errors."""
+class BestdistException(Exception):
+    """Base exception for all bestdist errors."""
     pass
 
 
-class DataValidationError(PdistException):
+class DataValidationError(BestdistException):
     """Raised when input data is invalid."""
     pass
 
 
-class FittingError(PdistException):
+class FittingError(BestdistException):
     """Raised when distribution fitting fails."""
     pass
 
 
-class InsufficientDataError(PdistException):
+class InsufficientDataError(BestdistException):
     """Raised when there's not enough data to fit a distribution."""
     pass
 
 
-class InvalidDistributionError(PdistException):
+class InvalidDistributionError(BestdistException):
     """Raised when an invalid distribution is specified."""
     pass
 

@@ -1,7 +1,7 @@
 """Utility modules."""
 
 from .exceptions import (
-    PdistException,
+    BestdistException,
     DataValidationError,
     FittingError,
     InsufficientDataError,
@@ -10,7 +10,7 @@ from .exceptions import (
 )
 
 __all__ = [
-    "PdistException",
+    "BestdistException",
     "DataValidationError",
     "FittingError",
     "InsufficientDataError",

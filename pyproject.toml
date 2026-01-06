@@ -3,14 +3,14 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pdist"
+name = "bestdist"
 version = "0.1.0"
 description = "Find the best probability distribution for your data"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Wilmar Sepulveda", email = "wilmar.sepulveda@example.com"}
 ]
 keywords = ["statistics", "probability", "distribution", "fitting", "data-analysis"]
 classifiers = [
@@ -52,17 +52,17 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/pdist"
-Documentation = "https://pdist.readthedocs.io"
-Repository = "https://github.com/yourusername/pdist"
-"Bug Tracker" = "https://github.com/yourusername/pdist/issues"
+Homepage = "https://github.com/Wilmar3752/pdist"
+Documentation = "https://github.com/Wilmar3752/pdist#readme"
+Repository = "https://github.com/Wilmar3752/pdist"
+"Bug Tracker" = "https://github.com/Wilmar3752/pdist/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
-include = ["pdist*"]
+include = ["bestdist*"]
 
 [tool.black]
 line-length = 88
@@ -81,7 +81,7 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = [
     "--strict-markers",
-    "--cov=pdist",
+    "--cov=bestdist",
     "--cov-report=term-missing",
     "--cov-report=html",
 ]

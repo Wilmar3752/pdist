@@ -2,8 +2,8 @@
 
 import pytest
 import numpy as np
-from pdist.distributions.continuous import Normal
-from pdist.utils.exceptions import InsufficientDataError
+from bestdist.distributions.continuous import Normal
+from bestdist.utils.exceptions import InsufficientDataError
 
 
 class TestNormal:
