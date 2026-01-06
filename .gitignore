@@ -111,5 +111,8 @@ dmypy.json
 .DS_Store
 Thumbs.db
 
-# Project specific
+# Project specific - Testing files
 testing.ipynb
+test_structure.py
+quick_test.py
+*.test.ipynb
