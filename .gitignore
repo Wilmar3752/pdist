@@ -116,3 +116,5 @@ testing.ipynb
 test_structure.py
 quick_test.py
 *.test.ipynb
+notebook/
+debug_test.py
