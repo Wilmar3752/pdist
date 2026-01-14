@@ -39,6 +39,7 @@ __license__ = "MIT"
 # Core functionality
 from .core.fitter import DistributionFitter
 from .core.base import BaseDistribution
+from .core.base_discrete import BaseDiscreteDistribution
 
 # Continuous distributions
 from .distributions.continuous.normal import Normal
@@ -50,6 +51,12 @@ from .distributions.continuous.exponential import Exponential
 from .distributions.continuous.uniform import Uniform
 from .distributions.continuous.cauchy import Cauchy
 from .distributions.continuous.student_t import StudentT
+
+# Discrete distributions
+from .distributions.discrete.poisson import Poisson
+from .distributions.discrete.binomial import Binomial
+from .distributions.discrete.negative_binomial import NegativeBinomial
+from .distributions.discrete.geometric import Geometric
 
 # Exceptions
 from .utils.exceptions import (
@@ -65,8 +72,9 @@ __all__ = [
     # Main classes
     "DistributionFitter",
     "BaseDistribution",
+    "BaseDiscreteDistribution",
     
-    # Distributions
+    # Continuous distributions
     "Normal",
     "Gamma",
     "Beta",
@@ -76,6 +84,12 @@ __all__ = [
     "Uniform",
     "Cauchy",
     "StudentT",
+    
+    # Discrete distributions
+    "Poisson",
+    "Binomial",
+    "NegativeBinomial",
+    "Geometric",
     
     # Exceptions
     "BestdistException",

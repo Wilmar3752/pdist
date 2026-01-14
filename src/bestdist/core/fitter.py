@@ -1,11 +1,12 @@
 """Main distribution fitter for finding the best distribution."""
 
-from typing import List, Optional, Dict, Any, Type
+from typing import List, Optional, Dict, Any, Type, Union, Literal
 import warnings
 import numpy as np
 import pandas as pd
 
 from ..core.base import BaseDistribution
+from ..core.base_discrete import BaseDiscreteDistribution
 from ..distributions.continuous.normal import Normal
 from ..distributions.continuous.gamma import Gamma
 from ..distributions.continuous.beta import Beta
@@ -15,6 +16,10 @@ from ..distributions.continuous.exponential import Exponential
 from ..distributions.continuous.uniform import Uniform
 from ..distributions.continuous.cauchy import Cauchy
 from ..distributions.continuous.student_t import StudentT
+from ..distributions.discrete.poisson import Poisson
+from ..distributions.discrete.binomial import Binomial
+from ..distributions.discrete.negative_binomial import NegativeBinomial
+from ..distributions.discrete.geometric import Geometric
 from ..utils.types import ArrayLike, FitResult
 from ..utils.exceptions import FittingError, InvalidDistributionError
 
@@ -51,16 +56,21 @@ class DistributionFitter:
     """
     
     # Default distributions to try
-    DEFAULT_DISTRIBUTIONS = [
+    DEFAULT_CONTINUOUS_DISTRIBUTIONS = [
         Normal, Gamma, Beta, Weibull,
         Lognormal, Exponential, Uniform, Cauchy, StudentT
+    ]
+    
+    DEFAULT_DISCRETE_DISTRIBUTIONS = [
+        Poisson, Binomial, NegativeBinomial, Geometric
     ]
     
     def __init__(
         self,
         data: ArrayLike,
-        distributions: Optional[List[Type[BaseDistribution]]] = None,
-        method: str = 'ks'
+        distributions: Optional[List[Union[Type[BaseDistribution], Type[BaseDiscreteDistribution]]]] = None,
+        dist_type: Literal['continuous', 'discrete'] = 'continuous',
+        method: Optional[str] = None
     ):
         """
         Initialize the fitter.
@@ -68,12 +78,29 @@ class DistributionFitter:
         Args:
             data: Input data to fit distributions to
             distributions: List of distribution classes to try.
-                          If None, uses DEFAULT_DISTRIBUTIONS
-            method: Goodness-of-fit test method ('ks', 'ad', 'chi2')
+                          If None, uses defaults based on dist_type
+            dist_type: Type of distributions ('continuous' or 'discrete')
+            method: Goodness-of-fit test method. 
+                   If None, uses 'ks' for continuous, 'chi2' for discrete
         """
+        self.dist_type = dist_type
         self.data = self._prepare_data(data)
-        self.distributions = distributions or self.DEFAULT_DISTRIBUTIONS
-        self.method = method
+        
+        # Set default distributions based on type
+        if distributions is None:
+            if dist_type == 'continuous':
+                self.distributions = self.DEFAULT_CONTINUOUS_DISTRIBUTIONS
+            else:
+                self.distributions = self.DEFAULT_DISCRETE_DISTRIBUTIONS
+        else:
+            self.distributions = distributions
+        
+        # Set default method based on type
+        if method is None:
+            self.method = 'ks' if dist_type == 'continuous' else 'chi2'
+        else:
+            self.method = method
+            
         self.results: List[FitResult] = []
         self._fitted = False
         

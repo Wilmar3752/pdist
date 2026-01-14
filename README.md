@@ -39,14 +39,15 @@ pip install -e ".[dev]"
 
 ## Quick Start
 
+### Continuous Data
 ```python
 from bestdist import DistributionFitter
 import numpy as np
 
-# Your data (can be list, numpy array, or pandas Series)
+# Your continuous data (e.g., measurements, prices)
 data = np.random.gamma(2, 2, 1000)
 
-# Create fitter and find best distribution
+# Create fitter (continuous is default)
 fitter = DistributionFitter(data)
 results = fitter.fit()
 
@@ -66,9 +67,27 @@ fitter.plot_best_fit()
 fitter.compare_distributions()
 ```
 
+### Discrete Data
+```python
+from bestdist import DistributionFitter
+import numpy as np
+
+# Your discrete data (e.g., count data)
+data = np.random.poisson(lam=3.5, size=1000)
+
+# Create fitter for discrete distributions
+fitter = DistributionFitter(data, dist_type='discrete')
+results = fitter.fit()
+
+# Get best distribution
+best = fitter.get_best_distribution()
+print(f"Best fit: {best['distribution']}")
+print(f"Lambda: {best['parameters']}")
+```
+
 ## Supported Distributions
 
-### Continuous Distributions
+### Continuous Distributions (9 distributions)
 - **Normal** (Gaussian): Symmetric, bell-shaped distribution
 - **Gamma**: Skewed distribution for positive values
 - **Beta**: Bounded [0, 1], flexible shapes
@@ -79,13 +98,16 @@ fitter.compare_distributions()
 - **Cauchy**: Heavy-tailed distribution (undefined mean/variance)
 - **Student-t**: Robust to outliers, heavier tails than Normal
 
+### Discrete Distributions (4 distributions)
+- **Poisson**: Count data, number of events in fixed interval
+- **Binomial**: Number of successes in fixed trials
+- **Negative Binomial**: Overdispersed count data, failures before successes
+- **Geometric**: Number of trials until first success
+
 ### Coming Soon
 - Chi-square
 - F-distribution
 - Pareto
-- Poisson (discrete)
-- Binomial (discrete)
-- Negative Binomial (discrete)
 
 ## Advanced Usage
 
@@ -94,14 +116,24 @@ fitter.compare_distributions()
 ```python
 from bestdist import DistributionFitter
 from bestdist.distributions.continuous import (
-    Normal, Gamma, Beta, Weibull,
-    Lognormal, Exponential, Uniform, Cauchy, StudentT
+    Normal, Gamma, Lognormal, Exponential
+)
+from bestdist.distributions.discrete import (
+    Poisson, Binomial, NegativeBinomial
 )
 
-# Only fit specific distributions
+# Continuous: only fit specific distributions
 fitter = DistributionFitter(
-    data,
+    continuous_data,
     distributions=[Normal, Gamma, Lognormal, Exponential]
+)
+results = fitter.fit()
+
+# Discrete: only fit specific distributions
+fitter = DistributionFitter(
+    count_data,
+    dist_type='discrete',
+    distributions=[Poisson, NegativeBinomial]
 )
 results = fitter.fit()
 ```
@@ -118,6 +150,7 @@ best_bic = fitter.get_best_distribution(criterion='bic')
 ### Individual Distribution Usage
 
 ```python
+# CONTINUOUS DISTRIBUTIONS
 from bestdist.distributions.continuous import Normal, Lognormal, Exponential
 import numpy as np
 
@@ -125,36 +158,35 @@ import numpy as np
 data = np.random.normal(5, 2, 1000)
 dist = Normal(data)
 params = dist.fit()
-
-print(f"Mean: {dist.mean:.2f}")
-print(f"Std: {dist.std:.2f}")
-
-# Test goodness of fit
-ks_stat, p_value = dist.test_goodness_of_fit()
-print(f"KS statistic: {ks_stat:.4f}, p-value: {p_value:.4f}")
+print(f"Mean: {dist.mean:.2f}, Std: {dist.std:.2f}")
 
 # Example 2: Lognormal (income data)
 income_data = np.random.lognormal(mean=10.5, sigma=0.8, size=1000)
 lognormal = Lognormal(income_data)
 lognormal.fit()
-
 print(f"Mean income: ${lognormal.mean:,.2f}")
 print(f"Median income: ${lognormal.median:,.2f}")
 
-# Example 3: Exponential (wait times)
-wait_times = np.random.exponential(scale=5.0, size=1000)
-exponential = Exponential(wait_times)
-exponential.fit()
+# DISCRETE DISTRIBUTIONS
+from bestdist.distributions.discrete import Poisson, Binomial
 
-print(f"Average wait time: {exponential.mean:.2f} minutes")
-print(f"Rate (λ): {exponential.rate:.4f} events/minute")
+# Example 3: Poisson (count data)
+count_data = np.random.poisson(lam=3.5, size=1000)
+poisson = Poisson(count_data)
+poisson.fit()
+print(f"Lambda (rate): {poisson.mu:.4f}")
+print(f"P(X=5) = {poisson.pmf(5):.4f}")
 
-# Generate samples
+# Example 4: Binomial (success/failure)
+trials_data = np.random.binomial(n=10, p=0.3, size=1000)
+binomial = Binomial(trials_data)
+binomial.fit()
+print(f"n (trials): {binomial.n}, p (success): {binomial.p:.4f}")
+
+# Generate samples, evaluate PDF/CDF/PMF
 samples = dist.rvs(size=100, random_state=42)
-
-# Evaluate PDF/CDF
 x = np.linspace(0, 10, 100)
-pdf_values = dist.pdf(x)
+pdf_values = dist.pdf(x)  # For continuous
 cdf_values = dist.cdf(x)
 ```
 
