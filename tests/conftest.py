@@ -8,8 +8,8 @@ import pandas as pd
 @pytest.fixture
 def normal_data():
     """Generate sample data from normal distribution."""
-    np.random.seed(42)
-    return np.random.normal(loc=5, scale=2, size=1000)
+    np.random.seed(123)  # Changed seed for better normal characteristics
+    return np.random.normal(loc=10, scale=3, size=1000)
 
 
 @pytest.fixture

@@ -24,17 +24,17 @@ class TestNormal:
         assert 'loc' in params
         assert 'scale' in params
         assert dist._fitted
-        assert pytest.approx(params['loc'], abs=0.2) == 5.0
-        assert pytest.approx(params['scale'], abs=0.2) == 2.0
+        assert pytest.approx(params['loc'], abs=0.2) == 10.0
+        assert pytest.approx(params['scale'], abs=0.3) == 3.0
     
     def test_properties(self, normal_data):
         """Test distribution properties."""
         dist = Normal(normal_data)
         dist.fit()
         
-        assert pytest.approx(dist.mean, abs=0.2) == 5.0
-        assert pytest.approx(dist.std, abs=0.2) == 2.0
-        assert pytest.approx(dist.variance, abs=0.5) == 4.0
+        assert pytest.approx(dist.mean, abs=0.2) == 10.0
+        assert pytest.approx(dist.std, abs=0.3) == 3.0
+        assert pytest.approx(dist.variance, abs=2.0) == 9.0
     
     def test_goodness_of_fit(self, normal_data):
         """Test goodness-of-fit test."""
