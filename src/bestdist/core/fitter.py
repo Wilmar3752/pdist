@@ -112,10 +112,17 @@ class DistributionFitter:
             data = np.array(data)
             
         # Remove NaN values
-        data = np.asarray(data)[~np.isnan(np.asarray(data))]
+        data_float = np.asarray(data, dtype=float)
+        data = data[~np.isnan(data_float)]
         
         if len(data) == 0:
             raise ValueError("Data is empty after removing NaN values")
+        
+        # For discrete distributions, convert to integers
+        if self.dist_type == 'discrete':
+            data = np.asarray(data, dtype=int)
+        else:
+            data = np.asarray(data, dtype=float)
             
         return data
     
@@ -183,7 +190,7 @@ class DistributionFitter:
         self._fitted = True
         return self.results
     
-    def _calculate_aic(self, dist: BaseDistribution) -> float:
+    def _calculate_aic(self, dist: Union[BaseDistribution, BaseDiscreteDistribution]) -> float:
         """
         Calculate Akaike Information Criterion.
         
@@ -191,10 +198,17 @@ class DistributionFitter:
         where k is number of parameters and L is likelihood
         """
         k = len(dist.params)
-        log_likelihood = np.sum(np.log(dist.pdf(self.data) + 1e-10))
+        
+        # Use pmf for discrete, pdf for continuous
+        if isinstance(dist, BaseDiscreteDistribution):
+            probs = dist.pmf(self.data)
+        else:
+            probs = dist.pdf(self.data)
+        
+        log_likelihood = np.sum(np.log(probs + 1e-10))
         return 2 * k - 2 * log_likelihood
     
-    def _calculate_bic(self, dist: BaseDistribution) -> float:
+    def _calculate_bic(self, dist: Union[BaseDistribution, BaseDiscreteDistribution]) -> float:
         """
         Calculate Bayesian Information Criterion.
         
@@ -203,7 +217,14 @@ class DistributionFitter:
         """
         k = len(dist.params)
         n = len(self.data)
-        log_likelihood = np.sum(np.log(dist.pdf(self.data) + 1e-10))
+        
+        # Use pmf for discrete, pdf for continuous
+        if isinstance(dist, BaseDiscreteDistribution):
+            probs = dist.pmf(self.data)
+        else:
+            probs = dist.pdf(self.data)
+        
+        log_likelihood = np.sum(np.log(probs + 1e-10))
         return k * np.log(n) - 2 * log_likelihood
     
     def get_best_distribution(
@@ -296,19 +317,35 @@ class DistributionFitter:
         if best is None:
             raise FittingError("No distributions were successfully fitted")
             
-        dist_obj: BaseDistribution = best['distribution_object']
+        dist_obj = best['distribution_object']
+        is_discrete = isinstance(dist_obj, BaseDiscreteDistribution)
         
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
         
-        # Histogram with PDF overlay
-        ax1.hist(self.data, bins=bins, density=True, alpha=0.7, 
-                color='skyblue', edgecolor='black', label='Data')
+        # Histogram with PDF/PMF overlay
+        if is_discrete:
+            # For discrete: use bar plot
+            unique_vals, counts = np.unique(self.data, return_counts=True)
+            probs = counts / len(self.data)
+            ax1.bar(unique_vals, probs, alpha=0.7, color='skyblue', 
+                   edgecolor='black', label='Data', width=0.8)
+            
+            # Plot PMF
+            x_range = np.arange(self.data.min(), self.data.max() + 1)
+            ax1.plot(x_range, dist_obj.pmf(x_range), 'ro-', lw=2,
+                    label=f'{best["distribution"]} PMF', markersize=4)
+            ax1.set_ylabel('Probability')
+        else:
+            # For continuous: use histogram
+            ax1.hist(self.data, bins=bins, density=True, alpha=0.7, 
+                    color='skyblue', edgecolor='black', label='Data')
+            
+            x_range = np.linspace(self.data.min(), self.data.max(), 1000)
+            ax1.plot(x_range, dist_obj.pdf(x_range), 'r-', lw=2,
+                    label=f'{best["distribution"]} PDF')
+            ax1.set_ylabel('Density')
         
-        x_range = np.linspace(self.data.min(), self.data.max(), 1000)
-        ax1.plot(x_range, dist_obj.pdf(x_range), 'r-', lw=2,
-                label=f'{best["distribution"]} PDF')
         ax1.set_xlabel('Value')
-        ax1.set_ylabel('Density')
         ax1.set_title(f'Best Fit: {best["distribution"]} (p={best["p_value"]:.4f})')
         ax1.legend()
         ax1.grid(True, alpha=0.3)
@@ -372,18 +409,32 @@ class DistributionFitter:
             col = idx % n_cols
             ax = axes[row, col]
             
-            dist_obj: BaseDistribution = result['distribution_object']
+            dist_obj = result['distribution_object']
+            is_discrete = isinstance(dist_obj, BaseDiscreteDistribution)
             
-            # Histogram
-            ax.hist(self.data, bins=bins, density=True, alpha=0.5,
-                   color='skyblue', edgecolor='black', label='Data')
-            
-            # PDF overlay
-            ax.plot(x_range, dist_obj.pdf(x_range), 'r-', lw=2,
-                   label=f'{result["distribution"]} PDF')
+            # Plot data and fitted distribution
+            if is_discrete:
+                # For discrete: use bar plot
+                unique_vals, counts = np.unique(self.data, return_counts=True)
+                probs = counts / len(self.data)
+                ax.bar(unique_vals, probs, alpha=0.5, color='skyblue', 
+                      edgecolor='black', label='Data', width=0.8)
+                
+                # Plot PMF
+                x_discrete = np.arange(self.data.min(), self.data.max() + 1)
+                ax.plot(x_discrete, dist_obj.pmf(x_discrete), 'ro-', lw=2,
+                       label=f'{result["distribution"]} PMF', markersize=3)
+            else:
+                # For continuous: use histogram
+                ax.hist(self.data, bins=bins, density=True, alpha=0.5,
+                       color='skyblue', edgecolor='black', label='Data')
+                
+                # PDF overlay
+                ax.plot(x_range, dist_obj.pdf(x_range), 'r-', lw=2,
+                       label=f'{result["distribution"]} PDF')
             
             ax.set_xlabel('Value')
-            ax.set_ylabel('Density')
+            ax.set_ylabel('Density' if not is_discrete else 'Probability')
             ax.set_title(
                 f'{result["distribution"]}\n'
                 f'p-value: {result["p_value"]:.4f}, '
