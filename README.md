@@ -69,19 +69,23 @@ fitter.compare_distributions()
 ## Supported Distributions
 
 ### Continuous Distributions
-- **Normal** (Gaussian): Symmetric, bell-shaped
-- **Gamma**: Skewed, positive values
+- **Normal** (Gaussian): Symmetric, bell-shaped distribution
+- **Gamma**: Skewed distribution for positive values
 - **Beta**: Bounded [0, 1], flexible shapes
-- **Weibull**: Common in reliability engineering
+- **Weibull**: Common in reliability engineering and lifetime analysis
+- **Lognormal**: Right-skewed, for positive data (income, prices)
+- **Exponential**: Memoryless distribution for waiting times
+- **Uniform**: Equal probability across a range
+- **Cauchy**: Heavy-tailed distribution (undefined mean/variance)
+- **Student-t**: Robust to outliers, heavier tails than Normal
 
 ### Coming Soon
-- Lognormal
-- Exponential
-- Uniform
-- Student's t
 - Chi-square
+- F-distribution
+- Pareto
 - Poisson (discrete)
 - Binomial (discrete)
+- Negative Binomial (discrete)
 
 ## Advanced Usage
 
@@ -89,12 +93,15 @@ fitter.compare_distributions()
 
 ```python
 from bestdist import DistributionFitter
-from bestdist.distributions.continuous import Normal, Gamma, Beta
+from bestdist.distributions.continuous import (
+    Normal, Gamma, Beta, Weibull,
+    Lognormal, Exponential, Uniform, Cauchy, StudentT
+)
 
 # Only fit specific distributions
 fitter = DistributionFitter(
     data,
-    distributions=[Normal, Gamma, Beta]
+    distributions=[Normal, Gamma, Lognormal, Exponential]
 )
 results = fitter.fit()
 ```
@@ -111,13 +118,11 @@ best_bic = fitter.get_best_distribution(criterion='bic')
 ### Individual Distribution Usage
 
 ```python
-from bestdist.distributions.continuous import Normal
+from bestdist.distributions.continuous import Normal, Lognormal, Exponential
 import numpy as np
 
-# Generate data
+# Example 1: Normal distribution
 data = np.random.normal(5, 2, 1000)
-
-# Fit distribution
 dist = Normal(data)
 params = dist.fit()
 
@@ -127,6 +132,22 @@ print(f"Std: {dist.std:.2f}")
 # Test goodness of fit
 ks_stat, p_value = dist.test_goodness_of_fit()
 print(f"KS statistic: {ks_stat:.4f}, p-value: {p_value:.4f}")
+
+# Example 2: Lognormal (income data)
+income_data = np.random.lognormal(mean=10.5, sigma=0.8, size=1000)
+lognormal = Lognormal(income_data)
+lognormal.fit()
+
+print(f"Mean income: ${lognormal.mean:,.2f}")
+print(f"Median income: ${lognormal.median:,.2f}")
+
+# Example 3: Exponential (wait times)
+wait_times = np.random.exponential(scale=5.0, size=1000)
+exponential = Exponential(wait_times)
+exponential.fit()
+
+print(f"Average wait time: {exponential.mean:.2f} minutes")
+print(f"Rate (λ): {exponential.rate:.4f} events/minute")
 
 # Generate samples
 samples = dist.rvs(size=100, random_state=42)

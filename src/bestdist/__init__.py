@@ -45,6 +45,11 @@ from .distributions.continuous.normal import Normal
 from .distributions.continuous.gamma import Gamma
 from .distributions.continuous.beta import Beta
 from .distributions.continuous.weibull import Weibull
+from .distributions.continuous.lognormal import Lognormal
+from .distributions.continuous.exponential import Exponential
+from .distributions.continuous.uniform import Uniform
+from .distributions.continuous.cauchy import Cauchy
+from .distributions.continuous.student_t import StudentT
 
 # Exceptions
 from .utils.exceptions import (
@@ -66,6 +71,11 @@ __all__ = [
     "Gamma",
     "Beta",
     "Weibull",
+    "Lognormal",
+    "Exponential",
+    "Uniform",
+    "Cauchy",
+    "StudentT",
     
     # Exceptions
     "BestdistException",
