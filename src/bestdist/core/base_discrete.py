@@ -181,6 +181,9 @@ class BaseDiscreteDistribution(ABC):
             if len(observed_counts) < 2:
                 return 0.0, 1.0
             
+            # Normalize expected counts to match observed total (fix scipy issue)
+            expected_counts = expected_counts * (observed_counts.sum() / expected_counts.sum())
+            
             statistic, p_value = chisquare(observed_counts, expected_counts)
             
         elif method == 'ks':
